@@ -2,11 +2,11 @@ from django.shortcuts import render
 from django.views import View
 from django.db.models import OuterRef, Subquery, F, ExpressionWrapper, DecimalField, Case, When
 from django.utils import timezone
-from .models import Product, Discount, Cart
+from .models import Product, Discount, Cart, WishList
 from rest_framework import viewsets, response
 from rest_framework.permissions import IsAuthenticated
 from .serializers import CartSerializer
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.models import User
 
 
@@ -173,8 +173,29 @@ class ProductSingleView(View):
                                })
 
 
-# class WishListView(View):
-#     def get(self, request):
-#         if request.user.is_auntificated:
-#             wishlist = WishList.objects.filter(user=request.user)
-#             return render(request, "store/wishlist.html", {'wishlist': wishlist})
+class WishListView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            wishlist = WishList.objects.filter(user=request.user)
+            return render(request, "store/wishlist.html", {'wishlist': wishlist})
+        return redirect('login:login')
+
+class WishListRemoveView(View):
+    def get(self, request, id):
+        product = get_object_or_404(Product, id=id)
+        wishlist_item = WishList.objects.filter(user=request.user, product=product)
+        wishlist_item.delete()
+        return redirect('store:wishlist')
+
+class WishListAddView(View):
+    def get(self, request, id):
+        product = get_object_or_404(Product, id=id)
+        wishlist_item = WishList.objects.filter(user=request)
+
+        if wishlist_item.exists():
+            return redirect('store:shop')
+        else:
+            wishlist_item = WishList(user=request.user, product=product)
+            wishlist_item.save()
+            return redirect('store:shop')
+

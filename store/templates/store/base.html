@@ -59,6 +59,7 @@
 	        <ul class="navbar-nav ml-auto">
               	<li class="nav-item"><a class="nav-link" href="{% url 'store:shop' %}">Shop</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'store:cart' %}">Cart</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'store:wishlist' %}">Wishlist</a></li>
 	          <li class="nav-item cta cta-colored"><a href="{% url 'store:cart' %}" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
                 {% if request.user.is_authenticated %}
                 <li class="nav-item"><a class="nav-link">{{request.user.username}}</a></li>
