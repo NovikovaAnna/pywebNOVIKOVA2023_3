@@ -122,15 +122,18 @@ class WishListRemoveView(View):
 
 class WishListAddView(View):
     def get(self, request, id):
-        product = get_object_or_404(Product, id=id)
-        wishlist_item = WishList.objects.filter(user=request.user, product=product)
+        if request.user.is_authenticated:
+            product = get_object_or_404(Product, id=id)
+            wishlist_item = WishList.objects.filter(user=request.user, product=product)
 
-        if wishlist_item.exists():
-            return redirect('store:shop')
-        else:
-            wishlist_item = WishList(user=request.user, product=product)
-            wishlist_item.save()
-            return redirect('store:shop')
+            if wishlist_item.exists():
+                return redirect('store:shop')
+            else:
+                wishlist_item = WishList(user=request.user, product=product)
+                wishlist_item.save()
+                return redirect('store:shop')
+
+        return redirect('login:login')
 #
 # class WishListView(APIView):
 #     def get(self, request):
