@@ -19,7 +19,7 @@ from store.urls import router as cart_router
 
 
 urlpatterns = [
-    path('grappelli/', include('grappelli.urls')),
+    # path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls),
     path('other/', include('other.urls')),
     path('login/', include('login.urls')),
